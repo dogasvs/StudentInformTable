@@ -1,67 +1,61 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import Button from '@mui/material/Button';
 
-let id = 0;
-const generateId = () => ++id;
 
 const records = [
   {
     id: 1,
-    ad: "Sude",
-    soyad: "Taştekin",
-    ePosta: "sude@gmail.com",
-    dogumTarihi: "2002-07-26"
+    ad: "Orhan",
+    soyad: "Ekici",
+    ePosta: "orhanekici@gmail.com",
+    dogumTarihi: "1989-03-17"
   },
   {
     id: 2,
-    ad: "Arda",
-    soyad: "Toraman",
+    ad: "Doğa",
+    soyad: "Savaş",
     ePosta: "arda@gmail.com",
     dogumTarihi: "2004-04-01"
   },
   {
     id: 3,
-    ad: "Sıla",
-    soyad: "Kara",
-    ePosta: "sila@gmail.com",
-    dogumTarihi: "2003-09-08"
+    ad: "Melek",
+    soyad: "Dal",
+    ePosta: "melekdal@gmail.com",
+    dogumTarihi: "2000-09-12"
   },
   {
     id: 4,
-    ad: "Ezel",
-    soyad: "Çakın",
-    ePosta: "ezel@gmail.com",
-    dogumTarihi: "2002-08-07"
+    ad: "Sema",
+    soyad: "Bekdemir",
+    ePosta: "semabekdemir@gmail.com",
+    dogumTarihi: "1999-02-10"
   },
 ];
+
 function App() {
   const [data, setData] = useState([]);
+  const [DialogOpen, setDialogOpen] = useState(false);
 
-  function appendStudent(ad, soyad, ePosta, dogumTarihi) {
-    const dataObj = {
-      id: generateId(),
-      ad,
-      soyad,
-      ePosta,
-      dogumTarihi
-    }
-    setData([...data, dataObj]);
+  function showDialog() {   
+    setDialogOpen(true);
+   
   }
 
-  useEffect(() => {
-    // if(!localStorage.data) {
-    //   localStorage.data = JSON.stringify(records);
-    // } 
-    // veriler geldi ondan sildik
-    setData(JSON.parse(localStorage.data));
-  }, []);
+  function closeDialog() { 
+    setDialogOpen(false);
+  }
+
+  // useEffect(() => {
+  //   // if(!localStorage.data) {
+  //   //   localStorage.data = JSON.stringify(records);
+  //   // } 
+  //   // veriler geldi ondan sildik
+  //   setData(JSON.parse(localStorage.data));
+  // }, []);
 
   function save() {
     localStorage.data = JSON.stringify(data);
-
   }
 
   function updateRecord(record) {
@@ -81,9 +75,14 @@ function App() {
     save();
   }
 
+  function appendStudent(record) {
+    setData([...data, { id: data.length + 1, ...record }]); //sema abladan aldım öğrenciyi dataya ekliyoruz
+    closeDialog(); 
+  }
+
   return (
     <div className='container'>
-      <h1>Öğrenci bilgi sistemi <AddStudent appendStudent={appendStudent} /></h1>
+      <h1>Öğrenci bilgi sistemi <button onClick={showDialog}>Yeni</button> </h1>
       <div className="studentTable">
         <ul className="studentTableTitles">
           <li>Ad</li>
@@ -94,49 +93,39 @@ function App() {
         </ul>
         {data.map(x => <StudentRow key={x.id} {...x} deleteRecord={deleteRecord} updateRecord={updateRecord} />)}
       </div>
+      {DialogOpen && (
+        <AddStudent
+          OpenModal={DialogOpen}
+          appendStudent={appendStudent}
+          closeDialog={closeDialog}
+        />
+      )}
     </div>
   )
 }
 
-function AddStudent({ appendStudent }) {
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+function AddStudent({ OpenModal, appendStudent, closeDialog }) {
   function handleSubmit(e) {
     e.preventDefault();
-    appendStudent(e.target['ad'].value, e.target['soyad'].value, e.target['ePosta'].value, e.target['dogumTarihi'].value);
-    e.target.reset();
-    handleClose();
+    const formData = new FormData(e.target);
+    const formObj = Object.fromEntries(formData);
+    appendStudent(formObj);
   }
 
   return (
-    <>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        yeni
-      </Button>
-      <Dialog className='dialog' open={open} onClose={handleClose}>
-        <DialogContent>
-          <form onSubmit={handleSubmit}>
-            <input name='ad' required type="text" placeholder='Ad' />
-            <input name='soyad' required type="text" placeholder='Soyad' />
-            <input name='ePosta' required type="email" placeholder='E-posta' />
-            <input name='dogumTarihi' required type="date" placeholder='Doğum Tarihi' />
-            <button type="submit">Ekle</button>
-            <button type="button" onClick={handleClose}>İptal</button>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
-  )
+    <dialog className="modal" open={OpenModal}>
+    <form className="formModal" method="dialog" autoComplete="off" onSubmit={handleSubmit}>
+      <input required type="text" name="ad" placeholder="isim" />
+      <input required type="text" name="soyad" placeholder="Soyisim" />
+      <input required type="email" name="ePosta" placeholder="e-Posta" />
+      <input required type="date" name="dogumTarihi" placeholder="Doğum Tarihi" />
+      <button className="modelAddNew" type="submit">Ekle</button>
+      <button className="exit" type="button"
+        onClick={closeDialog}> Vazgeç</button>
+    </form>
+  </dialog>
+);
 }
-
 
 function StudentRow({ id, ad, soyad, ePosta, dogumTarihi, updateRecord, deleteRecord }) {
   const [isEditing, setEditing] = useState(false);

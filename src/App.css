@@ -117,8 +117,7 @@ input {
   padding: 4px;
 }
 
-.dialog input {
-  padding: 8px;
-  font-size: 14px;
-  margin-bottom: 10px;
+.modal {
+  margin: auto;
+  backdrop-filter: black;
 }
