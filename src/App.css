@@ -1,0 +1,124 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,button,textarea,select {
+  font: inherit;
+}
+
+p,h1,h2,h3,h4,h5,h6 {
+  overflow-wrap: break-word;
+}
+
+#root,
+#__next {
+  isolation: isolate;
+}
+
+.container {
+  margin: 0 auto;
+  width: 800px;
+}
+
+li {
+  list-style: none;
+}
+
+h1 {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  align-items: center;
+
+  button {
+    font-size: 12px;
+    font-weight: normal;
+    padding: 5px 8px;
+    text-transform: uppercase;
+  }
+}
+
+
+/* büyüktür işareti doğrudan çocuk seçiyor */
+.studentTable>* {
+  display: grid;
+  grid-template-columns: 15% 15% 30% 20% 20%;
+      margin-bottom: 2px;
+}
+
+.studentTableTitles {
+  font-weight: bold;
+  border-bottom: 4px solid lightslategray;
+
+  li {
+    padding: 10px;
+    &:last-child {
+      text-align: right;
+    }
+  }
+}
+
+.studentTableCol {
+  padding: 10px;
+
+  &:last-child {
+    text-align: right;
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  button {
+    font-size: 10px;
+    padding: 6px 8px;
+    border: 1px solid gray;
+    text-transform: uppercase;
+    cursor: pointer;
+    background-color: transparent;
+  }
+}
+
+.delBtn {
+  color: red;
+}
+
+.studentTable form :nth-child(odd) {
+  background-color: aliceblue;
+}
+
+.saveBtn {
+  color: green;
+  font-size: 18px;
+}
+
+input {
+  width: 100%;
+  font-size: 12px;
+  padding: 4px;
+}
+
+.dialog input {
+  padding: 8px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
